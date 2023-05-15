@@ -3,11 +3,11 @@ import { app } from "../../app";
 import { User } from "../../models/users";
 
 describe("POST /api/users/signin", () => {
-  it("fails when a email that does not exist is supplied", async () => {
+  it("fails when a username that does not exist is supplied", async () => {
     await request(app)
       .post("/api/users/signin")
       .send({
-        email: "test@test.com",
+        username: "username",
         password: "password",
       })
       .expect(400);
@@ -16,14 +16,14 @@ describe("POST /api/users/signin", () => {
     await request(app)
       .post("/api/users/signup")
       .send({
-        email: "test@test.com",
+        username: "username",
         password: "password",
       })
       .expect(201);
     await request(app)
       .post("/api/users/signin")
       .send({
-        email: "test@test.com",
+        username: "username",
         password: "",
       })
       .expect(400);
@@ -32,14 +32,14 @@ describe("POST /api/users/signin", () => {
     await request(app)
       .post("/api/users/signup")
       .send({
-        email: "test@test.com",
+        username: "username",
         password: "password",
       })
       .expect(201);
     const response = await request(app)
       .post("/api/users/signin")
       .send({
-        email: "test@test.com",
+        username: "username",
         password: "password",
       })
       .expect(200);

@@ -6,12 +6,14 @@ describe("POST /api/users/signup", () => {
   it("returns a 201 status code and creates a user if valid input is provided", async () => {
     const email = "test@example.com";
     const password = "testpassword";
+    const username = "username"
 
     const response = await request(app)
       .post("/api/users/signup")
       .send({
-        email: email,
-        password: password,
+        email,
+        password,
+        username
       })
       .expect(201);
 
@@ -20,11 +22,13 @@ describe("POST /api/users/signup", () => {
     const user = await User.findOne({ email: email });
     expect(user).toBeDefined();
     expect(user!.email).toEqual(email);
-    expect(user!.password).not.toEqual(password); // should be hashed
+    expect(user!.password).not.toEqual(password);
+    expect(user!.username).not.toEqual(username); // should be hashed
   });
 
   it("returns a 400 status code if the email already exists", async () => {
     const existingUser = User.build({
+      username: "username",
       email: "test@example.com",
       password: "testpassword",
     });
@@ -33,6 +37,7 @@ describe("POST /api/users/signup", () => {
     const response = await request(app)
       .post("/api/users/signup")
       .send({
+        username: "username1",
         email: "test@example.com",
         password: "newpassword",
       })
@@ -40,6 +45,26 @@ describe("POST /api/users/signup", () => {
 
     expect(response.body.errors).toBeDefined();
     expect(response.body.errors[0].message).toEqual("Email in use");
+  });
+  it("returns a 400 status code if the username already exists", async () => {
+    const existingUser = User.build({
+      username: "username",
+      email: "test@example.com",
+      password: "testpassword",
+    });
+    await existingUser.save();
+
+    const response = await request(app)
+      .post("/api/users/signup")
+      .send({
+        username: "username",
+        email: "test1@example.com",
+        password: "newpassword",
+      })
+      .expect(400);
+
+    expect(response.body.errors).toBeDefined();
+    expect(response.body.errors[0].message).toEqual("Username in use");
   });
 
   it("returns a 400 status code if an invalid email is provided", async () => {

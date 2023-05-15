@@ -7,6 +7,7 @@ describe("POST /api/users/signout", () => {
     await request(app)
       .post("/api/users/signup")
       .send({
+        username:"username",
         email: "test@test.com",
         password: "password",
       })

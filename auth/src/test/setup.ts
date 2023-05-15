@@ -38,12 +38,14 @@ afterAll(async () => {
 declare const global: NodeJS.Global & typeof globalThis;
 
 global.signin = async () => {
+  const username = "username"
   const email = "test@test.com";
   const password = "password";
 
   const response = await request(app).post("/api/users/signup").send({
     email,
     password,
+    username
   });
 
   expect(response.status).toEqual(201);

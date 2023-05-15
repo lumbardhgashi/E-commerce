@@ -1,14 +1,22 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, BadRequestError } from "@aatickets-22/commons";
 import { User } from "../models/users";
+import { BadRequestError, validateRequest } from "@aaecomm/common";
 
 const router = express.Router();
 
 router.post(
   "/api/users/signup",
   [
+    body("username")
+    .trim()
+    .isLength({ min: 3, max: 20 })
+    .withMessage("Username must be between 3 and 20 characters")
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage(
+      "Username must contain only letters, numbers, and underscores"
+    ),
     body("email").isEmail().withMessage("Email must be valid"),
     body("password")
       .trim()
@@ -17,15 +25,21 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { email, password, username } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingEmail = await User.findOne({ email });
 
-    if (existingUser) {
+    if (existingEmail) {
       throw new BadRequestError("Email in use");
+    }
+    const existingUsername = await User.findOne({ username });
+
+    if (existingUsername) {
+      throw new BadRequestError("Username in use");
     }
 
     const user = User.build({
+      username,
       email,
       password,
     });
@@ -36,6 +50,7 @@ router.post(
       {
         id: user.id,
         email: user.email,
+        role: user.role
       },
       process.env.JWT_KEY!
     );
@@ -43,8 +58,6 @@ router.post(
     req.session = {
       jwt: userJwt,
     };
-
-    console.log(req.session);
 
     res.status(201).send(user);
   }

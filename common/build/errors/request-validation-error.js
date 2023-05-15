@@ -13,7 +13,8 @@ class RequestValidationError extends custom_error_1.CustomError {
         return this.errors.map((error) => {
             return {
                 message: error.msg,
-                field: error.type,
+                //@ts-ignore
+                field: error.param,
             };
         });
     }

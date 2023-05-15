@@ -1,17 +1,25 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, BadRequestError } from "@aatickets-22/commons";
 
 import { User } from "../models/users";
 import { Password } from "../services/password";
+import { BadRequestError, validateRequest } from "@aaecomm/common";
+
 
 const router = express.Router();
 
 router.post(
   "/api/users/signin",
   [
-    body("email").isEmail().withMessage("Email must be valid"),
+    body("username")
+      .trim()
+      .isLength({ min: 3, max: 20 })
+      .withMessage("Username must be between 3 and 20 characters")
+      .matches(/^[a-zA-Z0-9_]+$/)
+      .withMessage(
+        "Username must contain only letters, numbers, and underscores"
+      ),
     body("password")
       .trim()
       .notEmpty()
@@ -19,9 +27,9 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ username });
 
     if (!existingUser) {
       throw new BadRequestError("Invalid credentials");
@@ -40,6 +48,7 @@ router.post(
       {
         id: existingUser.id,
         email: existingUser.email,
+        role: existingUser.role
       },
       process.env.JWT_KEY!
     );
@@ -47,7 +56,6 @@ router.post(
     req.session = {
       jwt: userJwt,
     };
-
     res.status(200).send(existingUser);
   }
 );

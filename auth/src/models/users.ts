@@ -2,19 +2,23 @@ import mongoose from "mongoose";
 import { Password } from "../services/password";
 
 interface UserAttrs {
+  username: string;
   email: string;
   password: string;
+  role?: string[]
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
     build(attrs: UserAttrs): UserDoc;
 }
 
-interface UserDoc extends mongoose.Document {
-    email: string,
-    password: string,
-}
 
+interface UserDoc extends mongoose.Document {
+  email: string;
+  password: string;
+  username: string;
+  role: string[];
+}
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -24,6 +28,15 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: [String],
+    required: true,
+    default: ["user"],
   },
 }, {
   toJSON: {
