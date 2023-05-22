@@ -38,6 +38,13 @@ spec:
                 name: cart-srv
                 port:
                   number: 3000
+          - path: /api/wishlist/?(.*)
+            pathType: Prefix
+            backend: 
+              service:
+                name: wishlist-srv
+                port:
+                  number: 3000
           - path: /?(.*)
             pathType: Prefix
             backend: 

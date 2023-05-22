@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wishlist-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wishlist-mongo
+  template: 
+    metadata:
+      labels:
+        app: wishlist-mongo
+    spec: 
+      containers: 
+        - name: wishlist-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wishlist-mongo-srv
+spec:
+  selector: 
+    app: wishlist-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
+       
