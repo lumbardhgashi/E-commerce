@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "../../../app";
 import { Product } from "../../../models/product";
 
+
 declare const global: NodeJS.Global & typeof globalThis;
 
 describe("POST /api/products", () => {

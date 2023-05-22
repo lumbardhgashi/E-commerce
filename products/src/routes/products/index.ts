@@ -11,6 +11,10 @@ router.get("/api/products", async (req: Request, res: Response) => {
     const productsQuery = Product.where("name").regex(new RegExp(name, "i"))
       .skip((page - 1) * pageSize)
       .limit(pageSize)
+      .populate({
+        path: 'category',
+        select: 'id name',
+      });
   
     const productsCountQuery = Product.where("name").regex(new RegExp(name, "i")).countDocuments();
   

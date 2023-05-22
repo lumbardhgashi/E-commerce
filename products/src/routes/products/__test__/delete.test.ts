@@ -1,7 +1,7 @@
 import request from "supertest";
 import { app } from "../../../app";
-import { Product } from "../../../models/product";
 import mongoose from "mongoose";
+import { Product } from "@aaecomm/common";
 
 declare const global: NodeJS.Global & typeof globalThis;
 

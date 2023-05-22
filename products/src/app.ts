@@ -10,6 +10,12 @@ import { showProductRouter } from "./routes/products/show";
 import { updateProductRouter } from "./routes/products/update";
 import { deleteProductRouter } from "./routes/products/delete";
 
+import { showCategoryRouter } from "./routes/categories/show";
+import { indexCategoryRouter } from "./routes/categories";
+import { createCategoryRouter } from "./routes/categories/new";
+import { updateCategoryRouter } from "./routes/categories/update";
+import { deleteCategoryRouter } from "./routes/categories/delete";
+
 
 const app = express();
 app.set('trust proxy', true);
@@ -26,6 +32,12 @@ app.use(indexProductRouter)
 app.use(createProductRouter)
 app.use(updateProductRouter)
 app.use(deleteProductRouter)
+
+app.use(showCategoryRouter)
+app.use(indexCategoryRouter)
+app.use(createCategoryRouter)
+app.use(updateCategoryRouter)
+app.use(deleteCategoryRouter)
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();

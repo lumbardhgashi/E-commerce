@@ -1,22 +1,14 @@
 import mongoose from "mongoose";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
+import { CategoryDoc } from "./category";
+import { IProduct } from "@aaecomm/common";
 
-interface ProductAttrs {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
+interface ProductAttrs
+  extends Pick<IProduct, "name" | "description" | "price" | "stock"> {
+  category: CategoryDoc;
+}
+export interface ProductDoc extends Omit<IProduct, "id">, mongoose.Document {}
 
-}
-export interface ProductDoc extends mongoose.Document {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  createdAt: Date;
-  updatedAt: Date;
-  version: number;
-}
 interface ProductModel extends mongoose.Model<ProductDoc> {
   build(attrs: ProductAttrs): ProductDoc;
 }
@@ -39,11 +31,9 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    updatedAt: {
-      type: mongoose.Schema.Types.Date,
-    },
-    createdAt: {
-      type: mongoose.Schema.Types.Date,
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
     },
   },
   {
@@ -53,32 +43,20 @@ const productSchema = new mongoose.Schema(
         delete ret._id;
       },
     },
+    timestamps: true,
   }
 );
 
-productSchema.pre("save", function (next) {
-  const now = new Date();
-  this.updatedAt = now;
-  if (!this.createdAt) {
-    this.createdAt = now;
-  }
-  next();
-});
-
-productSchema.pre("updateOne", function (next) {
-  const now = new Date();
-  this.set({ updatedAt: now });
-  next();
-});
-
-productSchema.set('versionKey', 'version')
+productSchema.set("versionKey", "version");
 productSchema.plugin(updateIfCurrentPlugin);
-
 
 productSchema.statics.build = (attrs: ProductAttrs) => {
   return new Product(attrs);
 };
 
-const Product = mongoose.model<ProductDoc, ProductModel>("Product", productSchema);
+const Product = mongoose.model<ProductDoc, ProductModel>(
+  "Product",
+  productSchema
+);
 
-export {Product}
+export { Product };

@@ -1,10 +1,13 @@
-import { requireAuth, validateRequest } from "@aaecomm/common";
+import { NotFoundError, requireAuth, validateRequest } from "@aaecomm/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { Product } from "../../models/product";
 import { natsWrapper } from "../../nats-wrapper";
 import { ProductCreatedPublisher } from "../../events/publishers/product-created-publisher";
+import mongoose from "mongoose";
+import { Category } from "../../models/category";
+import { Product } from "../../models/product";
 
+// const upload: Multer = multer({ dest: "uploads/" });
 const router = express.Router();
 
 router.post(
@@ -16,22 +19,38 @@ router.post(
     body("price")
       .isFloat({ gt: 0 })
       .withMessage("Price must be greater than 0"),
-    body("stock")
-      .isInt({ gt: 0 })
-      .withMessage("Stock must be greater than 0"),
+    body("stock").isInt({ gt: 0 }).withMessage("Stock must be greater than 0"),
+    body("categoryId")
+      .not()
+      .isEmpty()
+      .custom((input: string) => mongoose.Types.ObjectId.isValid(input)) // assumes that the ticket service uses MongoDB
+      .withMessage("TickedId must be provided"),
   ],
+  // upload.single("file"),
   validateRequest,
   async (req: Request, res: Response) => {
-    const { name,description, stock, price } = req.body;
+
+    // if (!req.file) {
+    //   throw new Error("Ska file");
+    // }
+
+    const { name, description, stock, price, categoryId } = req.body;
+
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      throw new NotFoundError();
+    }
 
     const product = Product.build({
       name,
       description,
       price,
       stock,
+      category,
     });
 
-    product.save()
+    product.save();
 
     await new ProductCreatedPublisher(natsWrapper.client).publish({
       id: product.id,

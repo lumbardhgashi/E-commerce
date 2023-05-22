@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 import { Password } from "../services/password";
+import { IUser } from "@aaecomm/common";
 
-interface UserAttrs {
-  username: string;
-  email: string;
-  password: string;
-  role?: string[]
+interface UserAttrs extends Pick<IUser, "username" | "email" | "password"> {
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
@@ -13,11 +10,7 @@ interface UserModel extends mongoose.Model<UserDoc> {
 }
 
 
-interface UserDoc extends mongoose.Document {
-  email: string;
-  password: string;
-  username: string;
-  role: string[];
+interface UserDoc extends Pick<IUser, "username" | "email" | "password" | "role">,  mongoose.Document {
 }
 
 const userSchema = new mongoose.Schema({
@@ -45,17 +38,13 @@ const userSchema = new mongoose.Schema({
       delete ret._id;
       delete ret.password; 
     },
-    versionKey: false
-  }
+    versionKey: false,
+  },
+  timestamps: true,
+  
+  
 });
 
-userSchema.pre('save', async function(done) {
-    if(this.isModified('password')) {
-        const hashed = await Password.toHash(this.get('password'))
-        this.set('password', hashed);
-    }
-    done()
-})
 
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);

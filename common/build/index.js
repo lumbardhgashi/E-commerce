@@ -31,3 +31,6 @@ __exportStar(require("./events/product-created-event"), exports);
 __exportStar(require("./events/product-updated-event"), exports);
 __exportStar(require("./events/product-deleted-event"), exports);
 __exportStar(require("./events/types/order-status"), exports);
+__exportStar(require("./types/product"), exports);
+__exportStar(require("./types/category"), exports);
+__exportStar(require("./types/user"), exports);

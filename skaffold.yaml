@@ -24,6 +24,14 @@ build:
         manual: 
           - src: 'src/**/*.ts'
             dest: .
+    - image: agonavd/ecomm-cart
+      context: cart
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
     - image: agonavd/ecomm-client
       context: client
       docker:

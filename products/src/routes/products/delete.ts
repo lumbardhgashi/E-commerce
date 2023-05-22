@@ -1,8 +1,8 @@
 import { NotFoundError, requireAuth } from "@aaecomm/common";
 import express, { Request, Response } from "express";
-import { Product } from "../../models/product";
 import { ProductDeletedPublisher } from "../../events/publishers/product-deleted-publisher";
 import { natsWrapper } from "../../nats-wrapper";
+import { Product } from "../../models/product";
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.delete(
       version: product.version,
     });
 
-    res.status(204).send();
+    res.status(204).send(true);
   }
 );
 

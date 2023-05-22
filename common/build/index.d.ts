@@ -15,3 +15,6 @@ export * from './events/product-created-event';
 export * from './events/product-updated-event';
 export * from './events/product-deleted-event';
 export * from './events/types/order-status';
+export * from './types/product';
+export * from './types/category';
+export * from './types/user';

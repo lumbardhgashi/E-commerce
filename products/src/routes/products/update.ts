@@ -1,9 +1,11 @@
-import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError, BadRequestError } from "@aaecomm/common";
+import { requireAuth, validateRequest, NotFoundError} from "@aaecomm/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { natsWrapper } from "../../nats-wrapper";
-import { Product } from "../../models/product";
 import { ProductUpdatedPublisher } from "../../events/publishers/product-updated-publisher";
+import mongoose from "mongoose";
+import { Category } from "../../models/category";
+import { Product } from "../../models/product";
 
 const router = express.Router();
 
@@ -19,11 +21,22 @@ router.put(
     body("stock")
       .isInt({ gt: 0 })
       .withMessage("Stock must be greater than 0"),
+    body("categoryId")
+      .not()
+      .isEmpty()
+      .custom((input: string) => mongoose.Types.ObjectId.isValid(input)) // assumes that the ticket service uses MongoDB
+      .withMessage("TickedId must be provided"),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
 
-    const { name,description, stock, price } = req.body;
+    const { name,description, stock, price, categoryId } = req.body;
+
+    const category = await Category.findById(categoryId)
+
+    if(!category) {
+      throw new NotFoundError()
+    }
 
     const product = await Product.findById(req.params.id)
 
@@ -38,7 +51,8 @@ router.put(
         name,
         description,
         stock,
-        price
+        price,
+        category
     })
 
     await product.save();

@@ -12,9 +12,10 @@ spec:
       labels:
         app: auth
     spec:
+
       containers:
         - name: auth
-          image: agonavd/ecomm-auth
+          image: agonavd/ecomm-auth 
           env:
             - name: MONGO_URI
               value: 'mongodb://auth-mongo-srv:27017/auth'

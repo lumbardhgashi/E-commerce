@@ -9,6 +9,7 @@ export const requireAuth = (role: string) => {
       throw new NotAuthorizedError();
     }
 
+    
     next();
   };
 };
