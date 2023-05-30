@@ -4,7 +4,7 @@ import { randomBytes } from "crypto";
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/api/wishlist", async (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
 

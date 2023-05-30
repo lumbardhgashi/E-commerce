@@ -4,7 +4,7 @@ import { Product } from "../models/products";
 
 const router = express.Router();
 
-router.post("/api/wishlist", async (req: Request, res: Response) => {
+router.post("/api/wishlist/:wishlistId", async (req: Request, res: Response) => {
   try {
     const { wishlistId, productId } = req.body;
 
