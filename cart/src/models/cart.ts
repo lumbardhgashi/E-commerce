@@ -1,85 +1,147 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
+import { CartItem, CartItemDoc } from "./cartItem";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
+import { ProductDoc } from "./product";
+import { BadRequestError } from "@aaecomm/common";
 
-interface CartAttrs {
-    id: number;
-    userId: number;
-    cmimiTotal: number;
-    cartItems: string; // should fix
+export interface CartAttrs {
+  userId: string;
+  cartItems: CartItemDoc[];
 }
 
-export interface CartDoc extends mongoose.Document{
-    id: number;
-    userID: number;
-    cmimiTotal: number;
-    cartItems: string;
-    // createdAt: Date;
-    // updatedAt: Date;
-    version: number;
+export interface CartDoc extends mongoose.Document {
+  userId: string;
+  cartItems: CartItemDoc[];
+  version: number;
+  addItemsToCart(product: ProductDoc, quantity: number): Promise<void>;
+  removeItemsFromCart(product: ProductDoc, quantity: number): Promise<void>;
 }
 
 interface CartModel extends mongoose.Model<CartDoc> {
-    build(attrs: CartAttrs): CartDoc;
+  build(attrs: CartAttrs): CartDoc;
+  findOrCreate(userId: string): Promise<CartDoc>;
 }
 
 const cartSchema = new mongoose.Schema(
-    {
-        id:{
-            type: Number,
-            required: true,
-        },
-        userID:{
-            type: mongoose.Schema.Types.ObjectId,
-            required: true, // Should check
-        },
-        cmimTotal:{
-            type: Number,
-            required: true,
-        },
-        cartitems:{
-            type: String,
-            required: true,
-        },
-        // createdAt:{
-        //     type: mongoose.Schema.Types.Date,
-        // },
-        // updatedAt:{
-        //     type: mongoose.Schema.Types.Date,
-        // },
+  {
+    userId: {
+      type: String,
+      required: true,
     },
-    {
-        toJSON:{
-            transform(doc, ret){
-                ret.id = ret._id;
-                delete ret._id;
-            },
-        },
-        timestamps: true,
-    }
+    cartItems: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CartItem",
+      },
+    ],
+  },
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  }
 );
 
-// cartSchema.pre("save", function (next){
-//     const now = new Date();
-//     this.updatedAt = now;
-//     if(!this.createdAt){
-//         this.createdAt = now;
-//     }
-//     next();
-// });
-
-// cartSchema.pre("updateOne", function(next) {
-//     const now = new Date();
-//     this.set({updatedAt: now});
-//     next();
-// });
-
-cartSchema.set('versionKey','version')
+cartSchema.set("versionKey", "version");
 cartSchema.plugin(updateIfCurrentPlugin);
 
+cartSchema.statics.findOrCreate = async (userId: string) => {
+  let cart: CartDoc | null = await Cart.findOne({
+    userId: userId,
+  }).populate({
+    path: "cartItems",
+    populate: {
+      path: "product",
+      model: "Product",
+    },
+  });
+
+  if (!cart) {
+    cart = Cart.build({
+      userId: userId,
+      cartItems: [],
+    });
+
+    await cart.save();
+  }
+
+  return cart;
+};
+
 cartSchema.statics.build = (attrs: CartAttrs) => {
-    return new Cart(attrs);
+  return new Cart(attrs);
+};
+
+cartSchema.methods.addItemsToCart = async function (
+  product: ProductDoc,
+  quantity: number
+): Promise<void> {
+  await this.populate({
+    path: "cartItems",
+    populate: {
+      path: "product",
+      model: "Product",
+    },
+  });
+  // Check if the product already exists in the cart
+  const existingCartItem = this.cartItems.find(
+    (item: CartItemDoc) => item.product._id.toString() === product.id.toString()
+  );
+  if (existingCartItem) {
+    const cartItem = await CartItem.findById(existingCartItem._id);
+    cartItem!.quantity += quantity;
+    await cartItem?.save();
+    existingCartItem.quantity += quantity;
+  } else {
+    const cartItem = CartItem.build({
+      product: product,
+      quantity,
+    });
+    await cartItem.save();
+    this.cartItems.push(cartItem);
+  }
+
+  // Save the cart
+  await this.save();
+};
+
+cartSchema.methods.removeItemsFromCart = async function (
+  product: ProductDoc,
+  quantity: number
+): Promise<void> {
+  await this.populate({
+    path: "cartItems",
+    populate: {
+      path: "product",
+      model: "Product",
+    },
+  });
+  // Check if the product already exists in the cart
+  const existingCartItem = this.cartItems.find(
+    (item: CartItemDoc) => item.product._id.toString() === product.id.toString()
+  );
+  if (!existingCartItem) {
+    throw new BadRequestError("Product doesn't exist in this cart");
+  }
+
+  existingCartItem.quantity -= quantity;
+
+  if (existingCartItem.quantity <= 0) {
+    console.log("updated 1");
+    await CartItem.findByIdAndDelete(existingCartItem._id);
+    this.cartItems = this.cartItems.filter(
+      (item: CartItemDoc) =>
+        item.product._id.toString() !== product.id.toString()
+    );
+  }
+
+  await CartItem.updateOne({ _id: existingCartItem._id }, existingCartItem);
+  await this.save();
 };
 
 const Cart = mongoose.model<CartDoc, CartModel>("Cart", cartSchema);
 
-export {Cart};
+export { Cart };
