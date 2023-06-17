@@ -31,6 +31,13 @@ spec:
                 name: products-srv
                 port:
                   number: 3000
+          - path: /api/images/?(.*)
+            pathType: Prefix
+            backend: 
+              service:
+                name: products-srv
+                port:
+                  number: 3000
           - path: /api/cart/?(.*)
             pathType: Prefix
             backend: 
@@ -38,11 +45,25 @@ spec:
                 name: cart-srv
                 port:
                   number: 3000
-          - path: /api/wishlist/?(.*)
+          - path: /api/orders/?(.*)
             pathType: Prefix
             backend: 
               service:
-                name: wishlist-srv
+                name: orders-srv
+                port:
+                  number: 3000
+          # - path: /api/wishlist/?(.*)
+          #   pathType: Prefix
+          #   backend: 
+          #     service:
+          #       name: wishlist-srv
+          #       port:
+          #         number: 3000
+          - path: /api/payments/?(.*)
+            pathType: Prefix
+            backend: 
+              service:
+                name: payments-srv
                 port:
                   number: 3000
           - path: /?(.*)

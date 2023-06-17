@@ -1,40 +1,45 @@
 import  mongoose from "mongoose";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
-import { ProductDoc } from "./products";
 
-
-export interface WishlistAttrs{
-    id: string;
-    userId: string;
-    products: ProductDoc[]; 
+interface WishlistAttrs{
+    id: number;
+    userId: number;
+    item: string[]; 
 }
 
 export interface WishlistDoc extends mongoose.Document{
-    id: string;
-    userId: string;
-    products: ProductDoc[]; 
+    id: number;
+    userId: number;
+    item: string;
+    createdAt: Date;
+    updatedAt: Date;
     version: number;
 }
 
-export interface WishlistModel extends mongoose.Model<WishlistDoc>{
+interface WishlistModel extends mongoose.Model<WishlistDoc>{
     build(attrs: WishlistAttrs): WishlistDoc;
 }
 
 const wishlistSchema = new mongoose.Schema(
     {
         id: {
-            type: String,
+            type: Number,
             required: true,
         },
         userId: {
+            type: Number,
+            required: true,
+        },
+        item: {
             type: String,
             required: true,
         },
-        products:{
-            type: Array,
-            required: true,
+        updatedAt: {
+            type: mongoose.Schema.Types.Date,
         },
-       
+        createdAt: {
+            type: mongoose.Schema.Types.Date,
+        },
     },
     {
         toJSON: {
@@ -46,6 +51,21 @@ const wishlistSchema = new mongoose.Schema(
     }
 );
 
+wishlistSchema.pre("save", function(next) {
+    const now = new Date();
+    this.updatedAt = now;
+    if(!this.createdAt){
+        this.createdAt = now;
+
+    }
+    next();
+});
+
+wishlistSchema.pre("updateOne" , function (next) {
+    const now = new Date();
+    this.set({ updatedAt: now });
+    next();
+});
 
 wishlistSchema.set('versionKey', 'version')
 wishlistSchema.plugin(updateIfCurrentPlugin);

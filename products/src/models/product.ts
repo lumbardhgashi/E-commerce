@@ -4,10 +4,12 @@ import { CategoryDoc } from "./category";
 import { IProduct } from "@aaecomm/common";
 
 interface ProductAttrs
-  extends Pick<IProduct, "name" | "description" | "price" | "stock"> {
+  extends Pick<IProduct, "name" | "description" | "price" | "stock" | "image"> {
   category: CategoryDoc;
 }
-export interface ProductDoc extends Omit<IProduct, "id">, mongoose.Document {}
+export interface ProductDoc extends Omit<IProduct, "id" | "category">, mongoose.Document {
+  category: CategoryDoc;
+}
 
 interface ProductModel extends mongoose.Model<ProductDoc> {
   build(attrs: ProductAttrs): ProductDoc;
@@ -35,6 +37,10 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
+    image: {
+      type: String,
+      required: true
+    }
   },
   {
     toJSON: {

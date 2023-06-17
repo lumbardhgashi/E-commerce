@@ -1,15 +1,13 @@
 import mongoose, { Schema, Types } from "mongoose";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { ProductDoc } from "./product";
+import { ICartItem } from "@aaecomm/common";
 
-export interface CartItemAttrs {
+export interface CartItemAttrs extends Pick<ICartItem, "quantity"> {
   product: ProductDoc;
-  quantity: number;
 }
-export interface CartItemDoc extends mongoose.Document {
+export interface CartItemDoc extends Omit<ICartItem, "id" | "product">, mongoose.Document {
   product: ProductDoc;
-  quantity: number;
-  version: number;
 }
 
 interface CartItemModel extends mongoose.Model<CartItemDoc> {

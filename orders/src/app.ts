@@ -9,6 +9,7 @@ import { showOrderRouter } from "./routes/show";
 import { indexOrderRouter } from "./routes";
 import { deleteOrderRouter } from "./routes/delete";
 import { getUserOrdersRouter } from "./routes/getUserOrders";
+import { updateOrderRouter } from "./routes/update";
 
 
 const app = express();
@@ -26,6 +27,8 @@ app.use(showOrderRouter)
 app.use(indexOrderRouter)
 app.use(deleteOrderRouter)
 app.use(getUserOrdersRouter)
+app.use(updateOrderRouter)
+
 
 
 app.all("*", async (req, res) => {

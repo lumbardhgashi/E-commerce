@@ -1,20 +1,18 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose from "mongoose";
 import { CartItem, CartItemDoc } from "./cartItem";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { ProductDoc } from "./product";
-import { BadRequestError } from "@aaecomm/common";
+import { BadRequestError, ICart } from "@aaecomm/common";
 
-export interface CartAttrs {
-  userId: string;
+export interface CartAttrs extends Pick<ICart, "userId"> {
   cartItems: CartItemDoc[];
 }
 
-export interface CartDoc extends mongoose.Document {
-  userId: string;
+export interface CartDoc extends Omit<ICart, "id" | "cartItems">, mongoose.Document {
   cartItems: CartItemDoc[];
-  version: number;
   addItemsToCart(product: ProductDoc, quantity: number): Promise<void>;
   removeItemsFromCart(product: ProductDoc, quantity: number): Promise<void>;
+  clearCart(): Promise<void>;
 }
 
 interface CartModel extends mongoose.Model<CartDoc> {
@@ -141,6 +139,17 @@ cartSchema.methods.removeItemsFromCart = async function (
   await CartItem.updateOne({ _id: existingCartItem._id }, existingCartItem);
   await this.save();
 };
+
+cartSchema.methods.clearCart = async function (): Promise<void> {
+    // Retrieve all cart items
+    const cartItems: CartItemDoc[] = this.cartItems;
+  
+    // Clear the cart items array in the cart
+    this.cartItems = [];
+  
+    // Save the updated cart
+    await this.save();
+}
 
 const Cart = mongoose.model<CartDoc, CartModel>("Cart", cartSchema);
 

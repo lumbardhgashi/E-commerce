@@ -1,6 +1,6 @@
 import request from "supertest";
 import { app } from "../../app";
-import { User } from "../../models/users";
+import { User } from "../../models/users old";
 
 describe("POST /api/users/signin", () => {
   it("fails when a username that does not exist is supplied", async () => {

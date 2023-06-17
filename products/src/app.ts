@@ -1,7 +1,8 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
-import { json } from "body-parser";
 import cookieSession from "cookie-session";
+import bodyParser from "body-parser";
+
 import { errorHandler, NotFoundError, currentUser } from "@aaecomm/common";
 
 import { createProductRouter } from "./routes/products/new";
@@ -15,29 +16,52 @@ import { indexCategoryRouter } from "./routes/categories";
 import { createCategoryRouter } from "./routes/categories/new";
 import { updateCategoryRouter } from "./routes/categories/update";
 import { deleteCategoryRouter } from "./routes/categories/delete";
+import { resolve } from "path";
 
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
-app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
-  signed: false,
-  secure: process.env.NODE_ENV !== "test"
-}));
 
-app.use(currentUser)
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.set("trust proxy", true);
 
-app.use(showProductRouter)
-app.use(indexProductRouter)
-app.use(createProductRouter)
-app.use(updateProductRouter)
-app.use(deleteProductRouter)
+app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(showCategoryRouter)
-app.use(indexCategoryRouter)
-app.use(createCategoryRouter)
-app.use(updateCategoryRouter)
-app.use(deleteCategoryRouter)
+app.use(
+  cookieSession({
+    signed: false,
+    secure: process.env.NODE_ENV !== "test",
+  })
+);
+
+app.use(express.static(resolve(__dirname, "images")))
+
+app.use(currentUser);
+
+app.use(showProductRouter);
+app.use(indexProductRouter);
+app.use(createProductRouter);
+app.use(updateProductRouter);
+app.use(deleteProductRouter);
+
+app.use(showCategoryRouter);
+app.use(indexCategoryRouter);
+app.use(createCategoryRouter);
+app.use(updateCategoryRouter);
+app.use(deleteCategoryRouter);
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.log("Default", { err });
+  next();
+});
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();
@@ -45,5 +69,4 @@ app.all("*", async (req, res) => {
 
 app.use(errorHandler);
 
-
-export {app}
+export { app };

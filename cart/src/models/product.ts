@@ -3,9 +3,9 @@ import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { IProduct } from "@aaecomm/common";
 
 export interface ProductAttrs
-  extends Pick<IProduct, "id" | "name" | "description" | "price" | "stock"> {
+  extends Pick<IProduct, "id" | "name" | "description" | "price" | "stock" | "image" | "version"> {
 }
-export interface ProductDoc extends Pick<IProduct, "name" | "description" | "price" | "stock" | "version">, mongoose.Document {}
+export interface ProductDoc extends Pick<IProduct, "name" | "description" | "price" | "stock" | "version" | "image">, mongoose.Document {}
 
 interface ProductModel extends mongoose.Model<ProductDoc> {
   build(attrs: ProductAttrs): ProductDoc;
@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    image: {
+      type: String,
+      required: true
+    }
   },
   {
     toJSON: {

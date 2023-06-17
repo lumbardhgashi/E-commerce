@@ -1,6 +1,6 @@
 import request from "supertest";
 import { app } from "../../app";
-import { User } from "../../models/users";
+import { User } from "../../models/users old";
 
 describe("POST /api/users/signup", () => {
   it("returns a 201 status code and creates a user if valid input is provided", async () => {

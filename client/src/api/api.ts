@@ -7,15 +7,15 @@ export const api = axios.create({
   
 });
 
-api.interceptors.request.use(config => {
-  if (!config.headers) config.headers = {} as AxiosHeaders;
+// api.interceptors.request.use(config => {
+//   if (!config.headers) config.headers = {} as AxiosHeaders;
 
-  config.headers["Content-Type"] = "application/json"
+//   config.headers["Content-Type"] = "application/json"
   
 
-  const token = getToken();
+//   const token = getToken();
 
-  config.headers.Authorization = token ? `Bearer ${token}` : ``;
+//   config.headers.Authorization = token ? `Bearer ${token}` : ``;
 
-  return config;
-});
+//   return config;
+// });

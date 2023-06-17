@@ -17,3 +17,15 @@ export const getServerUrl = () => {
 export const getApiUrl = () => {
   return getServerUrl() + "api/";
 };
+
+export const isOlderThanOneWeek = (dateString: Date | string) => {
+  const date = new Date(dateString);
+
+  const currentDate = new Date();
+
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+
+  return date < oneWeekAgo;
+}

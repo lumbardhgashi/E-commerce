@@ -32,8 +32,32 @@ build:
         manual: 
           - src: 'src/**/*.ts'
             dest: .
-    - image: agonavd/ecomm-wishlist
-      context: wishlist
+    - image: agonavd/ecomm-orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
+    # - image: agonavd/ecomm-wishlist
+    #   context: orders
+    #   docker:
+    #     dockerfile: Dockerfile
+    #   sync:
+    #     manual: 
+    #       - src: 'src/**/*.ts'
+    #         dest: .
+    - image: agonavd/ecomm-expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: agonavd/ecomm-payments
+      context: payments
       docker:
         dockerfile: Dockerfile
       sync:
@@ -48,3 +72,4 @@ build:
         manual: 
           - src: '**/*.js'
             dest: .
+

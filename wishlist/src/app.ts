@@ -3,15 +3,15 @@ import "express-async-errors";
 import { json } from "body-parser";
 import cookieSession from "cookie-session";
 import { errorHandler, NotFoundError, currentUser } from "@aaecomm/common";
-import createWishList from "./routes/createWishList";
-import addToWishList from "./routes/addToWishList";
-import removeFromWishList from "./routes/removeFromWishList";
-import showWishlist from "./routes/show";
+
+// import { createProductRouter } from "./routes/products/new";
+// import { indexProductRouter } from "./routes/products";
+// import { showProductRouter } from "./routes/products/show";
+// import { updateProductRouter } from "./routes/products/update";
+// import { deleteProductRouter } from "./routes/products/delete";
 
 
 const app = express();
-
-//  middleware and other configurations
 app.set('trust proxy', true);
 app.use(json());
 app.use(cookieSession({
@@ -21,16 +21,11 @@ app.use(cookieSession({
 
 app.use(currentUser)
 
-// Routes
-app.use("/wishlist/create", createWishList);
-app.use("/wishlist/add", addToWishList);
-app.use("/wishlist/remove", removeFromWishList);
-app.use("/wishlist/:wishlistId", showWishlist);
-
-// Start the server
-app.listen(3000, () => {
-  console.log("Server listening on port 3000");
-});
+// app.use(showProductRouter)
+// app.use(indexProductRouter)
+// app.use(createProductRouter)
+// app.use(updateProductRouter)
+// app.use(deleteProductRouter)
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();

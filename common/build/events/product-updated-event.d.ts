@@ -3,6 +3,7 @@ export interface ProductUpdatedEvent {
     subject: Subjects.ProductUpdated;
     data: {
         id: string;
+        image: string;
         name: string;
         description: string;
         price: number;

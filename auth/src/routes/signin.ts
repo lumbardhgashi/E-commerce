@@ -1,11 +1,9 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-
-import { User } from "../models/users";
 import { Password } from "../services/password";
 import { BadRequestError, validateRequest } from "@aaecomm/common";
-
+import { User } from "../models/user";
 
 const router = express.Router();
 
@@ -29,12 +27,11 @@ router.post(
   async (req: Request, res: Response) => {
     const { username, password } = req.body;
 
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ where: { username } });
 
     if (!existingUser) {
       throw new BadRequestError("Invalid credentials");
     }
-
     const passwordMatch = await Password.compare(
       existingUser.password,
       password
@@ -48,7 +45,8 @@ router.post(
       {
         id: existingUser.id,
         email: existingUser.email,
-        role: existingUser.role
+        username: existingUser.username,
+        role: existingUser.role,
       },
       process.env.JWT_KEY!
     );

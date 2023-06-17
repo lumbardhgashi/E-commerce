@@ -1,6 +1,6 @@
 {
   "name": "@aaecomm/common",
-  "version": "1.0.25",
+  "version": "1.0.40",
   "description": "",
   "main": "./build/index.js",
   "types": "./build/index.ts",

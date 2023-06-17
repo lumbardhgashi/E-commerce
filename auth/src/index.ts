@@ -1,21 +1,20 @@
-import mongoose from "mongoose";
 import { app } from "./app";
-
+import { sequelize } from "./sequelize";
 
 const start = async () => {
-
-  if(!process.env.JWT_KEY) {
-    throw new Error('JWT_Key not defined')
+  if (!process.env.JWT_KEY) {
+    throw new Error("JWT_Key not defined");
   }
-  if(!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI not defined')
+
+  if (!process.env.POSTGRESQL_URI) {
+    throw new Error("POSTGRESQL_URI not defined");
   }
 
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await sequelize.authenticate();
     console.log("Connected");
   } catch (err) {
-    console.error(err);
+    console.error({ err });
   }
   app.listen(3000, () => {
     console.log(new Date());

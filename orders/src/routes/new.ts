@@ -45,7 +45,7 @@ router.post(
           typeof shippingDetails.fullName === "string" &&
           typeof shippingDetails.address1 === "string" &&
           typeof shippingDetails.city === "string" &&
-          typeof shippingDetails.zip === "number" &&
+          typeof shippingDetails.zip === "string" &&
           typeof shippingDetails.country === "string"
         );
       })
@@ -85,6 +85,8 @@ router.post(
     })
 
     await order.save()
+
+    console.log(order, "CREATED ORDER");
 
     console.log("3. Expires at:", order.expiresAt);
 

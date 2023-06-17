@@ -12,13 +12,12 @@ spec:
       labels:
         app: auth
     spec:
-
       containers:
         - name: auth
           image: agonavd/ecomm-auth 
           env:
-            - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017/auth'
+            - name: POSTGRESQL_URI
+              value: "postgres://agon:password@auth-postgres-srv:5432/auth"
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

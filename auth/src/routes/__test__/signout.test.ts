@@ -1,6 +1,6 @@
 import request from "supertest";
 import { app } from "../../app";
-import { User } from "../../models/users";
+import { User } from "../../models/users old";
 
 describe("POST /api/users/signout", () => {
   it("clears cookie when successful", async () => {

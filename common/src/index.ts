@@ -16,12 +16,28 @@ export * from './events/subjects'
 export * from './events/product-created-event'
 export * from './events/product-updated-event'
 export * from './events/product-deleted-event'
+export * from './events/order-created-event'
+export * from './events/order-deleted-event'
+export * from './events/order-paid-event'
+export * from './events/expiration-complete-event'
+export * from './events/payment-created-event'
+
 
 export * from './events/types/order-status'
 
-export * from './types/product'
-export * from './types/category'
-export * from './types/user'
+export * from './types/product/product'
+export * from './types/category/category'
+export * from './types/user/user'
+export * from './types/cart/cartItem'
+export * from './types/cart/cart'
+export * from './types/order/orderItem'
+export * from './types/order/order'
+export * from './types/order/shippingDetails'
+export * from './types/payment/payment'
+
+
+
+
 
 
 

@@ -3,6 +3,7 @@ export interface ProductCreatedEvent {
     subject: Subjects.ProductCreated;
     data: {
         id: string;
+        image: string;
         name: string;
         description: string;
         price: number;

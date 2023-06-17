@@ -25,15 +25,12 @@ export class PaymentCreatedListener extends Listener<PaymentCreatedEvent> {
     }
 
     order.set({
-      status: OrderStatus.Complete,
+      status: OrderStatus.AwaitingPayment,
     });
 
     await order.save();
 
-    new OrderPaidPublisher(natsWrapper.client).publish({
-      id: order.id,
-      userId: order.userId
-    })
+
 
     msg.ack();
   }
