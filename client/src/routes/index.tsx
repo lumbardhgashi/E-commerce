@@ -1,4 +1,4 @@
-import { createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, useNavigate } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, useNavigate  } from "react-router-dom";
 import { App } from "../App";
 import Home from "../pages/Home";
 import Login from "../pages/Auth/Login.tsx";
@@ -10,8 +10,6 @@ import { Cart } from "../pages/Cart";
 import PrivateRoute from "./privateRoute";
 import ProductDetails from "../pages/Product";
 import Checkout from "../pages/Checkout";
-
-
 
 export const router =
   createBrowserRouter([
