@@ -1,0 +1,17 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.custom-spinner {
+  height: 15rem;
+  width: 15rem;
+  color: $primaryColor;
+  border-width: .5rem;
+}
+
+.loading-text {
+  margin-top: 1rem;
+}

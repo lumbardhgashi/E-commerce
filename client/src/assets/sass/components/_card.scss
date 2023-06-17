@@ -1,0 +1,12 @@
+.product-card {
+    // Regular styles
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all .2s ease-in;
+    cursor: pointer;
+    inset: 0;
+    // Hover effect
+    &:hover {
+        box-shadow: 0 0 0 rgba(0, 0, 0, .5);
+        inset: 1px;
+    }
+  }

@@ -1,0 +1,49 @@
+.product-image {
+  height: 35rem;
+  object-fit: contain;
+}
+
+.product-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.product-price {
+  font-size: 2rem;
+  color: $primaryColor;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-action {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    .plus-icon {
+      color: red;
+    }
+
+    .minus-icon {
+      color: blue;
+    }
+  }
+}
+
+.quantity-text {
+  font-size: 1.6rem;
+  margin: 0 1rem;
+}
