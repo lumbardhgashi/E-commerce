@@ -10,6 +10,9 @@ import { Cart } from "../pages/Cart";
 import PrivateRoute from "./privateRoute";
 import ProductDetails from "../pages/Product";
 import Checkout from "../pages/Checkout";
+import ProtectedRoute from "./protectedRoute.tsx";
+import AdminLayout from "../layouts/admin/AdminLayout.tsx";
+import Products from "../pages/Admin/Products/index.tsx";
 
 
 
@@ -29,7 +32,6 @@ export const router =
               path: "/products/:productId",
               element: <ProductDetails />
             },
-            
             {
               element: <PrivateRoute />,
               children: [
@@ -63,7 +65,21 @@ export const router =
             }
 
           ]
-        }
+        },
+        {
+          element: <AdminLayout />,
+          path: "",
+          children: [
+            {
+              path: '/admin/',
+              element: <Products />
+            },
+            {
+              path: '/admin/products',
+              element: <Products />
+            },
+          ]
+        },
       ]
     },
   ]);
