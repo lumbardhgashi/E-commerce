@@ -1,4 +1,4 @@
-import { createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, useNavigate } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, useNavigate  } from "react-router-dom";
 import { App } from "../App";
 import Home from "../pages/Home";
 import Login from "../pages/Auth/Login.tsx";
@@ -13,8 +13,6 @@ import Checkout from "../pages/Checkout";
 import ProtectedRoute from "./protectedRoute.tsx";
 import AdminLayout from "../layouts/admin/AdminLayout.tsx";
 import Products from "../pages/Admin/Products/index.tsx";
-
-
 
 export const router =
   createBrowserRouter([
