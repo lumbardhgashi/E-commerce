@@ -38,12 +38,12 @@ User.init(
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -74,13 +74,26 @@ User.init(
 );
 
 User.beforeSave(async (user: User) => {
-  if (user.changed('password')) {
+  if (user.changed("password")) {
     const hashedPassword = await Password.toHash(user.password);
     user.password = hashedPassword;
   }
 });
 
 // Synchronize the model with the database
-User.sync();
+User.sync().then(async () => {
+  const rowCount = await User.count();
+
+  if (rowCount === 0) {
+    // Create the user when the table is empty
+    const newUser = await User.create({
+      username: "admin",
+      email: "admin@gmail.com",
+      password: "password",
+      role: ["user", "admin"],
+    });
+    console.log("Admin user created:", newUser.toJSON());
+  }
+});
 
 export { User };

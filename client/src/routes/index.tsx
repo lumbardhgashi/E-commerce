@@ -13,6 +13,7 @@ import Checkout from "../pages/Checkout";
 import ProtectedRoute from "./protectedRoute.tsx";
 import AdminLayout from "../layouts/admin/AdminLayout.tsx";
 import Products from "../pages/Admin/Products/index.tsx";
+import Categories from "../pages/Admin/Categories/index.tsx";
 
 export const router =
   createBrowserRouter([
@@ -75,6 +76,10 @@ export const router =
             {
               path: '/admin/products',
               element: <Products />
+            },
+            {
+              path: '/admin/categories',
+              element: <Categories />
             },
           ]
         },

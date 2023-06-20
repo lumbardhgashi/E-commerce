@@ -3,6 +3,7 @@ import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
 import { OrderCreatedListener } from "./events/listeners/order-created-listener";
 import { OrderCancelledListener } from "./events/listeners/order-cancelled-listener";
+import { initialize } from "./initializer";
 
 
 const start = async () => {
@@ -42,6 +43,7 @@ const start = async () => {
     new OrderCancelledListener(natsWrapper.client).listen();
 
     console.log("Connected");
+    initialize()
   } catch (err) {
     console.error(err);
   }

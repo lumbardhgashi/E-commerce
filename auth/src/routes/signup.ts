@@ -22,44 +22,52 @@ router.post(
       .trim()
       .isLength({ min: 4, max: 20 })
       .withMessage("Password must be between 4 and 20 char"),
+      body('role').optional().isIn(['admin', 'user']),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-      const { email, password, username } = req.body;
+    let { email, password, username, role = "user" } = req.body;
 
-      const existingEmail = await User.findOne({ where: { email } });
-
-      if (existingEmail) {
-        throw new BadRequestError("Email in use");
-      }
-      const existingUsername = await User.findOne({ where: { username } });
-
-      if (existingUsername) {
-        throw new BadRequestError("Username in use");
-      }
-
-      const user = await User.create({
-        username,
-        email,
-        password,
-      });
-
-      const userJwt = jwt.sign(
-        {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-        },
-        process.env.JWT_KEY!
-      );
-
-      req.session = {
-        jwt: userJwt,
-      };
-
-      res.status(201).send(user);
+    if(role === "admin") {
+      role = ["user", "admin"]
+    } else {
+      role = ["user"]
     }
+
+    const existingEmail = await User.findOne({ where: { email } });
+
+    if (existingEmail) {
+      throw new BadRequestError("Email in use");
+    }
+    const existingUsername = await User.findOne({ where: { username } });
+
+    if (existingUsername) {
+      throw new BadRequestError("Username in use");
+    }
+
+    const user = await User.create({
+      username,
+      email,
+      password,
+      role
+    });
+
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_KEY!
+    );
+
+    req.session = {
+      jwt: userJwt,
+    };
+
+    res.status(201).send(user);
+  }
 );
 
 export { router as signUpRouter };

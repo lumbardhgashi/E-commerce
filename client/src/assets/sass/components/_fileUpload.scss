@@ -1,0 +1,54 @@
+.fileInput {
+    height: 100%;
+    width: 100%;
+    &__input {
+      display: none;
+      height: 0;
+      width: 0;
+    }
+  
+    &__container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      cursor: pointer;
+
+  
+    }
+    &__error {
+      border-color: #c9444d !important;
+      box-shadow: #c9444d 0px 0px 0px 1px;
+    }
+  
+    &__icon {
+      width: 1.6rem;
+      height: 1.6rem;
+      margin-right: 0.8rem;
+      
+      & path {
+        fill: currentColor;
+       }
+    }
+    &__label {
+      font-size: 1.6rem;
+      color: inherit;
+    }
+    &__preview {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+    &__error > &__filled {
+      color: #c9444d;
+    }
+  
+    &__error-message {
+      color: #c9444d;
+      font-size: 1.4rem;
+      margin-top: 0.25rem;
+    }
+  }
+  

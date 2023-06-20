@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 interface IProductCardProps {
   product: IProduct,
   onClickHandler: (id: string) => any
-  onAddToCart: (id:string) => void
+  onAddToCart: (id: string) => void
 }
 
 const ProductCard: React.FunctionComponent<IProductCardProps> = ({ product, onClickHandler, onAddToCart }) => {

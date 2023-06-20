@@ -4,7 +4,7 @@ import { User } from "../models/user";
 
 const router = express.Router();
 
-router.get('/api/users', currentUser, requireAuth("user"), validateRequest, async (req, res) => {
+router.get('/api/users', currentUser, requireAuth("admin"), validateRequest, async (req, res) => {
 
     const users = await User.findAll()
 

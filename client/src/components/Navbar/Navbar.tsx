@@ -25,6 +25,39 @@ const Header: React.FunctionComponent<IHeaderProps> = ({
 
     const cartItemsCount = cart?.cartItems?.reduce((acc, item) => acc + item.quantity, 0)
 
+    const privateSubMenu = [
+        {
+            id: 1,
+            href: "/orders",
+            label: "Orders",
+        },
+        {
+            id: 2,
+            href: "/wishlist",
+            label: "Wishlist",
+        },
+        {
+            id: 3,
+            href: "/history",
+            label: "History",
+        },
+        {
+            id: 6,
+            onClick: handleLogout,
+            label: "Logout",
+        },
+    ]
+
+    if(user?.role && user.role.includes("admin")) {
+        privateSubMenu.splice(privateSubMenu.length - 1, 0, {
+            id: 4,
+            href: "/admin",
+            label: "Dashboard",
+        },);
+    }
+
+
+
     const privateNavItems = [
         {
             id: 1,
@@ -46,32 +79,11 @@ const Header: React.FunctionComponent<IHeaderProps> = ({
                 <FaUser size={30} />
 
             </IconContext.Provider>,
-            children: [
-                {
-                    id: 1,
-                    href: "/orders",
-                    label: "Orders",
-                },
-                {
-                    id: 2,
-                    href: "/wishlist",
-                    label: "Wishlist",
-                },
-                {
-                    id: 3,
-                    href: "/history",
-                    label: "History",
-                },
-                {
-                    id: 5,
-                    onClick: handleLogout,
-                    label: "Logout",
-                },
-            ],
+            children: privateSubMenu,
             showLoggedIn: true
         }
     ]
-
+    console.log(user);
     const publicNavItems = [
         {
             id: 3,
@@ -90,6 +102,12 @@ const Header: React.FunctionComponent<IHeaderProps> = ({
     } else {
         navItems = [...publicNavItems]
     }
+
+
+    // if (user?.role.includes("admin")) {
+    //     navItems = [...navItems, ]
+    // }
+
 
     return (
         <Navbar

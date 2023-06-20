@@ -3,7 +3,7 @@ import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { CategoryDoc } from "./category";
 import { IProduct } from "@aaecomm/common";
 
-interface ProductAttrs
+export interface ProductAttrs
   extends Pick<IProduct, "name" | "description" | "price" | "stock" | "image"> {
   category: CategoryDoc;
 }

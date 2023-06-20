@@ -7,11 +7,10 @@ const router = express.Router();
 
 router.post(
   "/api/categories",
-  requireAuth("user"),
+  requireAuth("admin"),
   [body("name").not().isEmpty().withMessage("Name is required")],
   validateRequest,
   async (req: Request, res: Response) => {
-    try {
       const { name } = req.body;
 
       const category = Category.build({
@@ -21,10 +20,6 @@ router.post(
       await category.save();
 
       res.status(201).send(category);
-    } catch (err) {
-      console.log({ err });
-      res.send(err);
-    }
   }
 );
 

@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post(
   "/api/products",
-  requireAuth("user"),
+  requireAuth("admin"),
   upload.single("image"),
   validateRequest,
   async (req: Request, res: Response) => {

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get(
   "/api/orders",
-  requireAuth("user"),
+  requireAuth("admin"),
   async (req: Request, res: Response) => {
     const orders = await Order.find({}).populate({
       path: "orderItems",

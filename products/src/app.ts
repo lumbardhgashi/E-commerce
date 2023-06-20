@@ -58,11 +58,6 @@ app.use(createCategoryRouter);
 app.use(updateCategoryRouter);
 app.use(deleteCategoryRouter);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.log("Default", { err });
-  next();
-});
-
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });

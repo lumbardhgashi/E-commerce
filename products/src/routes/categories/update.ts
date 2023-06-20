@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.put(
   "/api/categories/:id",
-  requireAuth("user"),
+  requireAuth("admin"),
   [body("name").not().isEmpty().withMessage("Name is required")],
   validateRequest,
   async (req: Request, res: Response) => {
