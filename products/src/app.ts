@@ -3,6 +3,7 @@ import "express-async-errors";
 import cookieSession from "cookie-session";
 import bodyParser from "body-parser";
 
+import { resolve } from "path";
 import { errorHandler, NotFoundError, currentUser } from "@aaecomm/common";
 
 import { createProductRouter } from "./routes/products/new";
@@ -16,7 +17,18 @@ import { indexCategoryRouter } from "./routes/categories";
 import { createCategoryRouter } from "./routes/categories/new";
 import { updateCategoryRouter } from "./routes/categories/update";
 import { deleteCategoryRouter } from "./routes/categories/delete";
-import { resolve } from "path";
+import { showSpecializimiRouter } from "./routes/specializmi/show";
+import { indexSpecializimiRouter } from "./routes/specializmi";
+import { newSpecializimiRouter } from "./routes/specializmi/new";
+import { updateSpecializimiRouter } from "./routes/specializmi/update";
+import { deleteSpecializimiRouter } from "./routes/specializmi/delete";
+import { showSemundjaRouter } from "./routes/semundja/show";
+import { indexSemundjaRouter } from "./routes/semundja";
+import { newSemundjaRouter } from "./routes/semundja/new";
+import { updateSemundjaRouter } from "./routes/semundja/update";
+import { deleteSemundjaRouter } from "./routes/semundja/delete";
+
+
 
 const cors = require("cors");
 require("dotenv").config();
@@ -57,6 +69,20 @@ app.use(indexCategoryRouter);
 app.use(createCategoryRouter);
 app.use(updateCategoryRouter);
 app.use(deleteCategoryRouter);
+
+app.use(showSpecializimiRouter);
+app.use(indexSpecializimiRouter);
+app.use(newSpecializimiRouter);
+app.use(updateSpecializimiRouter);
+app.use(deleteSpecializimiRouter);
+
+app.use(showSemundjaRouter);
+app.use(indexSemundjaRouter);
+app.use(newSemundjaRouter);
+app.use(updateSemundjaRouter);
+app.use(deleteSemundjaRouter);
+
+
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();

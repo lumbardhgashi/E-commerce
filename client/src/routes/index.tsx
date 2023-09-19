@@ -1,4 +1,11 @@
-import { createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, useNavigate  } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Navigate,
+  Outlet,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { App } from "../App";
 import Home from "../pages/Home";
 import Login from "../pages/Auth/Login.tsx";
@@ -14,75 +21,78 @@ import ProtectedRoute from "./protectedRoute.tsx";
 import AdminLayout from "../layouts/admin/AdminLayout.tsx";
 import Products from "../pages/Admin/Products/index.tsx";
 import Categories from "../pages/Admin/Categories/index.tsx";
+import Specializimet from "../pages/Specializimet/index.tsx";
 
-export const router =
-  createBrowserRouter([
-    {
-      element: <App />,
-      children: [
-        {
-          element: <MainLayout />,
-          children: [
-            {
-              path: "/",
-              element: <Home />
-            },
-            {
-              path: "/products/:productId",
-              element: <ProductDetails />
-            },
-            {
-              element: <PrivateRoute />,
-              children: [
-                {
-                  path: "/cart",
-                  element: <Cart />
-                },
-                {
-                  path: "/checkout",
-                  element: <Checkout />
-                }
-              ]
-            },
-          ]
-        },
-        {
-          element: <PublicRoute />,
-          children: [
-            {
-              element: <AuthLayout />,
-              children: [
-                {
-                  path: '/login',
-                  element: <Login />
-                },
-                {
-                  path: '/register',
-                  element: <Register />,
-                }
-              ]
-            }
-
-          ]
-        },
-        {
-          element: <AdminLayout />,
-          path: "",
-          children: [
-            {
-              path: '/admin/',
-              element: <Products />
-            },
-            {
-              path: '/admin/products',
-              element: <Products />
-            },
-            {
-              path: '/admin/categories',
-              element: <Categories />
-            },
-          ]
-        },
-      ]
-    },
-  ]);
+export const router = createBrowserRouter([
+  {
+    element: <App />,
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/products/:productId",
+            element: <ProductDetails />,
+          },
+          {
+            path: "/specializimet",
+            element: <Specializimet />,
+          },
+          {
+            element: <PrivateRoute />,
+            children: [
+              {
+                path: "/cart",
+                element: <Cart />,
+              },
+              {
+                path: "/checkout",
+                element: <Checkout />,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        element: <PublicRoute />,
+        children: [
+          {
+            element: <AuthLayout />,
+            children: [
+              {
+                path: "/login",
+                element: <Login />,
+              },
+              {
+                path: "/register",
+                element: <Register />,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        element: <AdminLayout />,
+        path: "",
+        children: [
+          {
+            path: "/admin/",
+            element: <Products />,
+          },
+          {
+            path: "/admin/products",
+            element: <Products />,
+          },
+          {
+            path: "/admin/categories",
+            element: <Categories />,
+          },
+        ],
+      },
+    ],
+  },
+]);
